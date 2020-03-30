@@ -1,0 +1,80 @@
+@font-face {
+    font-family: 'Ubuntu';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Ubuntu'), url(./fonts/Ubuntu-Regular.ttf) format('truetype');
+}
+
+html{
+    font-family: 'Ubuntu', sans-serif;
+    background: black;
+}
+.game-thumb {
+    float: left;
+    padding : 5px;
+    background : black;
+    margin : 0;
+    width: 85px;
+    height : 85px;
+}
+.game-thumb > img {
+    width: 85px;
+    height : 85px;
+}
+#game-details{
+    height : 100px;
+    background : lightgrey;
+    padding : 20px;
+    text-align: center ;
+}
+.selected-game{
+    background:chartreuse;
+}
+#gd-game-name{
+    font-size: large;
+}
+#gd-game-abstract{
+    font-size: small;
+}
+.gd-button{
+    display: inline-block ;
+    margin-right : 10px;
+    margin-top : 10px;
+    padding: 10px;
+    background : #888888;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#jocly-github{
+    padding : 6px;
+}
+#jocly-github > a{
+    text-decoration: none;
+    font-size: small;
+}
+#rules-container{
+    height : 10px;
+    background : white;
+    transition: all .3s;
+    overflow : auto;
+}
+#rules{
+    width: 500px;
+    max-width: 100%;
+    margin: auto ;
+
+}
+.close-rules-button {
+    text-align: right;
+    padding : 5px;
+}
+.close-rules-button a{
+    text-decoration: none ;
+    padding : 3px;
+    background-color: cornflowerblue;
+    border-radius: 5px;
+    font : small ;
+    color : white;
+    padding: 3px 10px;
+}

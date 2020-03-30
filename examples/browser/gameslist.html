@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Jocly Game Control</title>
+    <meta name="description" content="Jocly Games Panel">
+    <meta name="author" content="Jocly">
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/gameslist.css">
+
+</head>
+
+
+<body>
+    <div id="game-details">
+        <div id="gd-game-name">Game's name</div>
+        <div id="gd-game-abstract">Game's abstract</div>
+        <div id="gd-buttons">
+            <div id="gd-buttons-play" class="gd-button" onClick="javascript:startSelectedGame();">Play Game</div>
+            <div id="gd-buttons-rules" class="gd-button" onClick="javascript:openRules();">Rules</div>
+        </div>
+        <div id="jocly-github"><a href="https://github.com/mi-g/jocly">Jocly on Github</a></div>
+    </div>
+    <div id="rules-container">
+        <div id="rules"></div>
+    </div>
+    <div id="games-panel"></div>
+
+    <script src="../../dist/browser/jocly.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script src="js/gameslist.js"></script>
+</body>
+</html>
