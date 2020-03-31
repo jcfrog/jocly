@@ -30,10 +30,8 @@ function openRules(){
         alert("Please select a game first");
     }else{
         Jocly.getGameConfig(selectedGame).then((p)=>{
-            console.log(p);
             $("#rules-container").css("height","500px");
             bRulesOpen = true ;
-            console.log();
             var rulesPath = "" ;
             if (typeof(p.model.rules) == "string"){
                 rulesPath = p.view.fullPath+"/"+p.model.rules ; 
@@ -58,7 +56,6 @@ function gameClicked(g){
         $(".game-thumb").removeClass("selected-game");
         $(g).addClass("selected-game");
         Jocly.getGameConfig(g.id).then((p)=>{
-            console.log(p);
             $("#gd-game-name").text(p.model["title-en"]);
             $("#gd-game-abstract").text(p.model["summary"]);
             $("#gd-buttons-play").css("background","#2dbd2d");
@@ -73,14 +70,10 @@ function gameClicked(g){
             //$("#gd-buttons-play").click(startSelectedGame);
         });
     }
-        
-    console.log(selectedGame);
 }
 
 function addGame(gameName){
-    console.log(gameName);
     Jocly.getGameConfig(gameName).then((p)=>{
-        console.log(p); 
         //$("#games-panel").append("<div>"+p.model["title-en"]+"</div>");
         var d = $('<div/>', {
             title : p.model["title-en"],
@@ -96,12 +89,6 @@ function addGame(gameName){
         }).appendTo(d);
         $("#games-panel").append(d);
         gameFullPath = p.view.fullPath ;
-        if (p.model.rules !== undefined){
-            var rulesPath = p.view.fullPath+"/"+p.model.rules.en ;
-            console.log(rulesPath);
-        }else{
-            console.log("no rules for " + gameName );
-        }
     })
 }
 
