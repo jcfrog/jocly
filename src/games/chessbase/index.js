@@ -1140,7 +1140,19 @@ exports.games = (function () {
  		"grid-board-view.js",
  		"fairy-set-view.js",
  		"wild-tamerlane-view.js"
- 	]
+	]
+	var modelScripts_simchess = [
+		'base-model.js',
+		'grid-geo-model.js',
+		'simchess-model.js'
+	]
+	var config_view_simchess = [
+		'base-view.js',
+		'grid-board-view.js',
+		'fairy-set-view.js',
+		'simchess-view.js'
+	]
+	 
 	return [
 		{
 			"name": "classic-chess",
@@ -5272,9 +5284,82 @@ exports.games = (function () {
  				}
  			},
  			"viewScripts": config_view_js_wtamerlane
-  		}		  		
-
-
-
+		},
+		{
+			"name": "simchess-chess",
+			"modelScripts": modelScripts_simchess,
+			"config": {
+				"status": true,
+				"model": {
+					"title-en": "Simchess",
+					"summary": "The evolution of chess",
+					"rules": {
+						"en": "simchess-rules.html"
+					},
+					"module": "chessbase",
+					"plazza": "true",
+					"thumbnail": "simchess-thumb.png",
+					"released": 1587485628,
+					"credits": {
+						"en": "simchess-credits.html"
+					},
+					"gameOptions": config_model_gameOptions,
+					"obsolete": false,
+					"js": modelScripts_simchess,
+					"description": {
+						"en": "simchess-description.html"
+					},
+					"levels": config_model_levels_15
+				},
+				"view": {
+					"title-en": "Simchess view",
+					"visuals": {
+						"600x600": [
+							"res/visuals/simchess-600x600-3d.jpg",
+							"res/visuals/simchess-600x600-2d.jpg"
+						]
+					},
+					"xdView": true,
+					"css": config_view_css,
+					"preferredRatio": 1,
+					"useShowMoves": true,
+					"useNotation": true,
+					"module": "chessbase",
+					"defaultOptions": config_view_defaultOptions,
+					"skins": [
+						/*{
+							"name": "skin3d",
+							"title": "3D Classic",
+							"3d": true,
+							"preload": [
+								"smoothedfilegeo|0|/res/ring-target.js",
+								"image|/res/images/cancel.png",
+								"image|/res/simchess/gamesprites.png",
+								"image|res/simchess/base-diffuse-map.jpg",
+								"image|res/simchess/base-normal-map.jpg",
+							],
+							"world": config_view_skins_world,
+							"camera": config_view_skins_camera
+						},*/
+						{
+							"name": "skin2d",
+							"title": "2D Classic",
+							"3d": false,
+							"preload": [
+								"image|/res/images/cancel.png",
+								"image|/res/images/whitebg.png",
+								"image|/res/simchess/gamesprites.png"
+							]
+						}
+					],
+					"animateSelfMoves": false,
+					"switchable": true,
+					"sounds": config_view_sounds,
+					"js": config_view_simchess,
+					"useAutoComplete": true
+				}
+			},
+			"viewScripts": config_view_simchess
+	   	}
 	]
 })()
