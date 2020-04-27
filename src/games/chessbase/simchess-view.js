@@ -457,6 +457,28 @@
         var simchesskitchessBoardDelta = {
             notationMode: "out",
             notationDebug: true,
+
+            paintOutNotation: function(spec,ctx,channel) {
+                NBROWS=this.cbVar.geometry.height;
+		        NBCOLS=this.cbVar.geometry.width;
+                var cSize = this.cbCSize(spec);
+                for (var row = 0; row < NBROWS; row++) {
+                    var displayedRow = NBROWS - row - 1;
+                    if(this.mViewAs<0)
+                        displayedRow=row;
+                    var x = -(NBCOLS/2 + spec.margins.x/2) * cSize.cx;
+                    var y = (row-NBROWS/2+.5) * cSize.cy;
+                    ctx.fillText(displayedRow, x, y);	
+                }
+                for (var col = 0; col < NBCOLS; col++) {
+                    var displayedCol=col;
+                    if(this.mViewAs<0)
+                        displayedCol = NBCOLS - col -1;
+                    var x = (col-NBCOLS/2+.5) * cSize.cx;
+                    var y = (NBROWS/2 + spec.margins.y/2) * cSize.cy;
+                    ctx.fillText(String.fromCharCode(97 + displayedCol), x , y);
+                }
+            },
         }
         simchesskitchessBoardDelta3d = $.extend(true, {}, simchesskitchessBoardDelta,
             {
@@ -558,13 +580,13 @@
                 "fr-prince": {
                     "2d": {
                         file: this.mViewOptions.fullPath + "/res/simchess/gamesprites.png",
-                        clipx: 100,
+                        clipx: 700,
                     },
                 },
                 "fr-princess": {
                     "2d": {
                         file: this.mViewOptions.fullPath + "/res/simchess/gamesprites.png",
-                        clipx: 700,
+                        clipx: 100,
                     },
                 },
                 "fr-mind": {
@@ -620,5 +642,6 @@
         else
             return (zFrom + zTo) / 2;
     }
+
 
 })();
