@@ -394,6 +394,34 @@
             },
         },
 
+        "fr-quarks-proton": {
+
+            paintTextureImageClip: function (spec, ctx, material, channel, channelData, imgKey, image, clip, resources) {
+                myPaintTextureImageClip(1, spec, ctx, material, channel, channelData, imgKey, image, clip, resources, 1100);
+            },
+
+            mesh: {
+                jsFile: "/res/pieces/base.js"
+            },
+            materials: {
+                mat0: {
+                    channels: {
+                        diffuse: {
+                            texturesImg: {
+                                diffImg: "res/simchess/base-diffuse-map.jpg",
+                                overlayImg1100: "/res/simchess/gamesprites.png",
+                            }
+                        },
+                        normal: {
+                            texturesImg: {
+                                normalImg: "res/simchess/base-normal-map.jpg",
+                            }
+                        }
+                    }
+                },
+            },
+        },
+
         "fr-moon": {
 
             paintTextureImageClip: function (spec, ctx, material, channel, channelData, imgKey, image, clip, resources) {
@@ -476,7 +504,7 @@
                         displayedCol = NBCOLS - col -1;
                     var x = (col-NBCOLS/2+.5) * cSize.cx;
                     var y = (NBROWS/2 + spec.margins.y/2) * cSize.cy;
-                    ctx.fillText(String.fromCharCode(97 + displayedCol), x , y);
+                    ctx.fillText(displayedCol == 0 ? "0" : String.fromCharCode(65 + displayedCol - 1), x , y);
                 }
             },
         }
@@ -580,13 +608,13 @@
                 "fr-prince": {
                     "2d": {
                         file: this.mViewOptions.fullPath + "/res/simchess/gamesprites.png",
-                        clipx: 700,
+                        clipx: 100,
                     },
                 },
                 "fr-princess": {
                     "2d": {
                         file: this.mViewOptions.fullPath + "/res/simchess/gamesprites.png",
-                        clipx: 100,
+                        clipx: 700,
                     },
                 },
                 "fr-mind": {
@@ -625,6 +653,12 @@
                         clipx: 1300,
                     },
                 },
+                "fr-quarks-proton": {
+                    "2d": {
+                        file: this.mViewOptions.fullPath + "/res/simchess/gamesprites.png",
+                        clipx: 1400,
+                    },
+                },
             }),
         };
     }
@@ -643,5 +677,98 @@
             return (zFrom + zTo) / 2;
     }
 
+	/*View.Board.cbAnimate = function(xdv,aGame,aMove,callback) {
+		var $this=this;
+		var animCount=1;
+		var tacSound=false;
+		
+		function EndAnim() {
+			if(--animCount==0){
+				if(tacSound)
+					aGame.PlaySound("tac"+(1+Math.floor(Math.random()*3)));
+				callback();
+			}
+		}
+		var piece=this.pieces[this.board[aMove.f]];
+
+        // if the final position is not the one indicated by the interface (ex : capture on another position)
+        var realt = (aMove.finalt != undefined) ? aMove.finalt : aMove.t ; 
+
+		var displaySpec0=aGame.cbMakeDisplaySpec(aMove.f,piece.s);
+		var displaySpec=aGame.cbMakeDisplaySpecForPiece(aGame,realt,piece);
+		for(var skin in displaySpec0) {
+			var spec=displaySpec0[skin];
+			if(spec.z===undefined)
+				continue;
+			(function(skin) {
+				var z0=spec.z;
+				var z2=displaySpec[skin].z;
+				var z1=$this.cbMoveMidZ(aGame,aMove,z0,z2,skin);
+				var c=z0;
+				var S1=c-z1;
+				var S2=c-z2;
+				
+				if(z1!=(z0+z2)/2)
+					tacSound=true;
+
+				var A=-1;
+				var B=4*S1-2*S2;
+				var C=-S2*S2;
+				var D=Math.abs(B*B-4*A*C);
+				var a1=(-B-Math.sqrt(D))/(2*A);
+				var a2=(-B+Math.sqrt(D))/(2*A);
+				var a=a1;
+				var b=-a-S2;
+				if(a==0 || -b/(2*a)<0 || -b/(2*a)>1) {
+					a=a2;
+					b=-a-S2;
+				}
+				displaySpec[skin].positionEasingUpdate = function(ratio) {
+					var y=(a*ratio*ratio+b*ratio+c)*this.SCALE3D;
+					this.object3d.position.y=y;
+				}
+			})(skin);
+		}
+
+		if (!tacSound)
+			aGame.PlaySound("move"+(1+Math.floor(Math.random()*4)));
+		
+		xdv.updateGadget("piece#"+piece.i,displaySpec,600,function() {
+			EndAnim();
+		});
+
+		if(aMove.c!=null) {
+			animCount++;
+			var anim3d={
+				positionEasingUpdate: null,
+			};
+			switch(aGame.cbView.captureAnim3d || "movedown") {
+			case 'movedown':
+				anim3d.z=-2000;
+				break;
+			case 'scaledown':
+				anim3d.scale=[0,0,0];
+				break;
+			}
+			var piece1=this.pieces[aMove.c];
+			xdv.updateGadget("piece#"+piece1.i,{
+				"2d": {
+					opacity: 0,
+				},
+				"3d": anim3d,
+			},600,EndAnim);
+		}
+		
+		if(aMove.cg!==undefined) {
+			var spec=aGame.cbVar.castle[aMove.f+"/"+aMove.cg];
+			var rookTo=spec.r[spec.r.length-1];
+			var piece=this.pieces[this.board[aMove.cg]];
+			var displaySpec=aGame.cbMakeDisplaySpecForPiece(aGame,rookTo,piece);
+			animCount++;
+			xdv.updateGadget("piece#"+piece.i,displaySpec,600,function() {
+				EndAnim();
+			});
+		}
+	}*/
 
 })();

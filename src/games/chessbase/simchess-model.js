@@ -1,5 +1,30 @@
 (function () {
 
+    //var simchessVersion = "quarksjump" ;
+    var simchessVersion = "quarksnojump" ;
+
+    //console.log("piecesTypes=",piecesTypes);
+    // defining types for readable promo cases
+    var T_ipawnw = 0;
+    var T_ipawnb = 1;
+    var T_pawnw = 2;
+    var T_pawnb = 3;
+    var T_rook = 4;
+    var T_bishop = 5;
+    var T_knight = 6;
+    var T_queen = 7;
+    var T_king = 8;
+    var T_mind = 9;
+    var T_env = 10;
+    var T_dna = 11;
+    var T_quarks = 12;
+    var T_sun = 13;
+    var T_moon = 14;
+    var T_princess = 15;
+    var T_prince = 16;
+    var T_quarks_proton = 17;
+
+
 
     var firstRow = 0;
     var lastRow = 9;
@@ -110,10 +135,10 @@
             [[1, 0], [0, 1], [-1, 0], [0, -1]].forEach(function (dc) {
                 $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["-90", 2, $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
                 $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["90", 2, $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 2, FLAG_JUMP], ["-90", 1, $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 2, FLAG_JUMP], ["90", 1, $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 3, FLAG_JUMP], ["-90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 3, FLAG_JUMP], ["90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 2, simchessVersion == "quarksjump" ? FLAG_JUMP : $this.cbConstants.FLAG_STOP], ["-90", 1, $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 2, simchessVersion == "quarksjump" ? FLAG_JUMP : $this.cbConstants.FLAG_STOP], ["90", 1, $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 3, simchessVersion == "quarksjump" ? FLAG_JUMP : $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 3, simchessVersion == "quarksjump" ? FLAG_JUMP : $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
             });
         }
 
@@ -148,11 +173,11 @@
                 continue;
             }
             [[-1, 1], [1, 1], [1, -1], [-1, -1]].forEach(function (dc) {
-                $this.cbExploreFlagedWay(pos, dc, [["0", -1, $this.cbConstants.FLAG_MOVE]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", -1]], graph, confine, geometry, flags);
             });
-            [[-1, 0], [0, 1], [1, 0], [0, -1]].forEach(function (dc) {
+            /*[[-1, 0], [0, 1], [1, 0], [0, -1]].forEach(function (dc) {
                 $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_CAPTURE]], graph, confine, geometry, flags);
-            });
+            });*/
 
         }
 
@@ -225,7 +250,7 @@
                 abbrev: 'B',
                 aspect: 'fr-bishop',
                 graph: this.cbBishopGraph(geometry, confine),
-                value: 3.1,
+                value: 3,
                 initial: [{ s: 1, p: 13 }, { s: 1, p: 16 }, { s: -1, p: 83 }, { s: -1, p: 86 }],
             },
 
@@ -234,7 +259,7 @@
                 abbrev: 'N',
                 aspect: 'fr-knight',
                 graph: this.cbKnightGraph(geometry, confine),
-                value: 2.9,
+                value: 3,
                 initial: [{ s: 1, p: 12 }, { s: 1, p: 17 }, { s: -1, p: 82 }, { s: -1, p: 87 }],
             },
 
@@ -243,7 +268,7 @@
                 abbrev: 'Q',
                 aspect: 'fr-queen',
                 graph: this.cbQueenGraph(geometry, confine),
-                value: 10,
+                value: 9,
                 initial: [{ s: 1, p: 14 }, { s: -1, p: 84 }],
             },
 
@@ -279,7 +304,7 @@
                 abbrev: 'D',
                 aspect: 'fr-dna',
                 graph: this.cbDNAGraph(geometry, confine),
-                value: 5,
+                value: 2,
                 initial: [{ s: 1, p: 2 }, { s: 1, p: 7 }, { s: -1, p: 92 }, { s: -1, p: 97 }],
             },
 
@@ -288,8 +313,8 @@
                 abbrev: 'A',
                 aspect: 'fr-quarks',
                 graph: this.cbQuarksGraph(geometry, confine),
-                value: 5,
-                initial: [{ s: 1, p: 3 }, { s: 1, p: 6 }, { s: -1, p: 93 }, { s: -1, p: 96 }],
+                value: 7,
+                initial: [{ s: 1, p: 3 }, { s: -1, p: 93 }],
             },
 
             13: {
@@ -297,7 +322,7 @@
                 abbrev: 'S',
                 aspect: 'fr-sun',
                 graph: this.cbSunGraph(geometry, confine),
-                value: 5,
+                value: 10,
                 initial: [{ s: 1, p: 4 }, { s: -1, p: 94 }],
             },
 
@@ -306,7 +331,7 @@
                 abbrev: 'L',
                 aspect: 'fr-moon',
                 graph: this.cbMoonGraph(geometry, confine),
-                value: 5,
+                value: 8,
                 initial: [{ s: 1, p: 5 }, { s: -1, p: 95 }],
             },
 
@@ -315,8 +340,8 @@
                 abbrev: 'X',
                 aspect: 'fr-princess',
                 graph: this.cbPrincessGraph(geometry, confine),
-                value: 5,
-                initial: [{ s: 1, p: 10 }, { s: -1, p: 80 }],
+                value: 4,
+                initial: [{ s: 1, p: 19 }, { s: -1, p: 89 }],
             },
 
             16: {
@@ -324,31 +349,22 @@
                 abbrev: 'Y',
                 aspect: 'fr-prince',
                 graph: this.cbPrinceGraph(geometry, confine),
-                value: 5,
-                initial: [{ s: 1, p: 19 }, { s: -1, p: 89 }],
+                value: 4,
+                initial: [{ s: 1, p: 10 }, { s: -1, p: 80 }],
             },
+
+            17: {
+                name: 'quarks',
+                abbrev: 'A',
+                aspect: 'fr-quarks-proton',
+                graph: this.cbQuarksGraph(geometry, confine),
+                value: 7,
+                initial: [{ s: 1, p: 6 }, { s: -1, p: 96 }],
+            }
 
         }
 
-        //console.log("piecesTypes=",piecesTypes);
-        // defining types for readable promo cases
-        var T_ipawnw = 0;
-        var T_ipawnb = 1;
-        var T_pawnw = 2;
-        var T_pawnb = 3;
-        var T_rook = 4;
-        var T_bishop = 5;
-        var T_knight = 6;
-        var T_queen = 7;
-        var T_king = 8;
-        var T_mind = 9;
-        var T_env = 10;
-        var T_dna = 11;
-        var T_quarks = 12;
-        var T_sun = 13;
-        var T_moon = 14;
-        var T_princess = 15;
-        var T_prince = 16;
+
 
         return {
 
@@ -381,4 +397,105 @@
 
         };
     }
+
+
+
+    var SuperModelBoardGenerateMoves=Model.Board.GenerateMoves;
+	Model.Board.GenerateMoves = function(aGame) {
+		SuperModelBoardGenerateMoves.apply(this,arguments); // call regular GenerateMoves method
+
+		// prince-ss special moves
+		var geo = aGame.cbVar.geometry ;
+		var board = aGame.mBoard.board ;
+		var $this = this ;
+		var xtraMoves = [];
+        for (var i = 0 ; i < this.mMoves.length ; i ++){
+			var  m = this.mMoves[i] ;
+			var attackerIdx = this.board[m.f];
+			if ((m.c == null) && ((this.pieces[attackerIdx].t == T_princess) || (this.pieces[attackerIdx].t == T_prince))){
+				// is there an opponent prince-ss around me? (top, left, right, bottom)
+				[[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(function (dc) {
+					var p = geo.Graph(m.t,dc);
+					if (p != null){
+						// check cell
+						if (board[p]>=0){
+							// there is a piece
+							var piece = $this.pieces[board[p]];
+							if ((piece.s != $this.mWho) && ((piece.t == T_prince) || (piece.t == T_princess))){
+								// this is an opponent prince-ss
+								console.log("I found a prince-ss to add", p);
+								// add same move but with capture
+								xtraMoves.push({
+									c:piece.i,
+									f:m.f,
+                                    t:p,
+                                    //finalt:m.t,
+									a:m.a,
+									ck:m.ck,
+									ept:m.ept
+								});
+							}
+						}
+					}
+				});
+			}
+		}
+		for (var i = 0 ; i < xtraMoves.length; i++){
+			this.mMoves.push(xtraMoves[i]);
+		}
+    }
+    /*
+    Model.Board.ApplyMove = function(aGame,move) {
+
+        // if the final position is not the one indicated by the interface (ex : capture on another position)
+        var realt = (move.finalt != undefined) ? move.finalt : move.t ;
+
+		var piece=this.pieces[this.board[move.f]];
+		if(move.cg!==undefined)
+			this.cbApplyCastle(aGame,move,true);
+		else {
+			this.zSign=aGame.zobrist.update(this.zSign,"board",piece.i,move.f);
+			this.board[piece.p]=-1;
+			if(move.pr!==undefined) {
+				this.zSign=aGame.zobrist.update(this.zSign,"type",piece.t,piece.i);
+				piece.t=move.pr;
+				this.zSign=aGame.zobrist.update(this.zSign,"type",piece.t,piece.i);
+			}
+			if(move.c!=null) {
+				var piece1=this.pieces[move.c];
+				this.zSign=aGame.zobrist.update(this.zSign,"board",piece1.i,piece1.p);
+				this.board[piece1.p]=-1;
+				piece1.p=-1;
+				piece1.m=true;
+				this.noCaptCount=0;
+			} else 
+				this.noCaptCount++;
+			piece.p=realt;
+			piece.m=true;
+			this.board[realt]=piece.i;
+			this.zSign=aGame.zobrist.update(this.zSign,"board",piece.i,realt);
+			if(aGame.g.pTypes[piece.t].isKing)
+				this.kings[piece.s]=realt;
+		}
+		this.check=!!move.ck;
+		this.lastMove={
+			f: move.f,
+			t: realt,
+			c: move.c,
+		}
+		if(move.ko!==undefined)
+			this.ending[piece.s]=move.ko;
+		if(move.ept!==undefined)
+			this.epTarget={
+				p: move.ept,
+				i: piece.i,
+			}
+		else
+			this.epTarget=null;
+		this.zSign=aGame.zobrist.update(this.zSign,"who",-this.mWho);
+		this.zSign=aGame.zobrist.update(this.zSign,"who",this.mWho);	
+		//this.cbIntegrity(aGame);
+	}*/
+
+
 })();
