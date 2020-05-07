@@ -129,16 +129,22 @@
     Model.Game.cbQuarksGraph = function (geometry, confine) {
         var $this = this;
         var flags = $this.cbConstants.FLAG_MOVE | $this.cbConstants.FLAG_CAPTURE;
+        var jumpflag = $this.cbConstants.FLAG_STOP ;
+		if($this.mOptions.quarksjump){
+			jumpflag = FLAG_JUMP ;
+		}
         var graph = {};
         for (var pos = 0; pos < geometry.boardSize; pos++) {
             graph[pos] = [];
             [[1, 0], [0, 1], [-1, 0], [0, -1]].forEach(function (dc) {
-                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["-90", 2, $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["90", 2, $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 2, simchessVersion == "quarksjump" ? FLAG_JUMP : $this.cbConstants.FLAG_STOP], ["-90", 1, $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 2, simchessVersion == "quarksjump" ? FLAG_JUMP : $this.cbConstants.FLAG_STOP], ["90", 1, $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 3, simchessVersion == "quarksjump" ? FLAG_JUMP : $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 3, simchessVersion == "quarksjump" ? FLAG_JUMP : $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
+				$this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["-90", 2, jumpflag], ["-90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["90", 2,  jumpflag], ["90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["-90", 2, jumpflag], ["0", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["90", 2,  jumpflag], ["0", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 2, jumpflag], ["-90", 1, $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 2, jumpflag], ["90", 1, $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 3, jumpflag], ["-90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 3, jumpflag], ["90", 1]], graph, confine, geometry, flags);
             });
         }
 
