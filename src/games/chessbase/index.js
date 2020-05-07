@@ -5303,7 +5303,13 @@ exports.games = (function () {
 					"credits": {
 						"en": "simchess-credits.html"
 					},
-					"gameOptions": config_model_gameOptions,
+					"gameOptions": {
+						"quarksjump" : false,
+						"preventRepeat": true,
+						"uctTransposition": "state",
+						"uctIgnoreLoop": false,
+						"levelOptions": config_model_gameOptions_levelOptions
+					},
 					"obsolete": false,
 					"js": modelScripts_simchess,
 					"description": {
