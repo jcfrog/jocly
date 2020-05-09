@@ -34,9 +34,15 @@
     var geometry = Model.Game.cbBoardGeometryGrid(10, 10);
 
     var confine = {};
+    var restrictedConfine = {};
 
     for (var pos = 0; pos < geometry.boardSize; pos++) {
         confine[pos] = 1;
+        if ( ((pos >= 0) && (pos < 10)) || (pos % 10 == 0) || (pos % 10 == 9) || ((pos >= 90) && (pos < 100)) ){
+            // ignore 
+        }else{
+            restrictedConfine[pos] = 1;
+        }
     }
 
     // graphs
@@ -197,6 +203,10 @@
     Model.Game.cbDefine = function () {
 
         // classic chess pieces
+        var confine4Queen = confine ;
+        if (this.mOptions.queenrestriction){
+            confine4Queen = restrictedConfine ;
+        }
 
         var piecesTypes = {
 
@@ -273,7 +283,7 @@
                 name: 'queen',
                 abbrev: 'Q',
                 aspect: 'fr-queen',
-                graph: this.cbQueenGraph(geometry, confine),
+                graph: this.cbQueenGraph(geometry, confine4Queen),
                 value: 9,
                 initial: [{ s: 1, p: 14 }, { s: -1, p: 84 }],
             },
