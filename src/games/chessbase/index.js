@@ -5304,8 +5304,9 @@ exports.games = (function () {
 						"en": "simchess-credits.html"
 					},
 					"gameOptions": {
-						"quarksjump" : true,
+						"quarksjump" : true,						
 						"queenrestriction" : false,
+						"blackstarts" : false,
 						"preventRepeat": true,
 						"uctTransposition": "state",
 						"uctIgnoreLoop": false,
@@ -5326,6 +5327,7 @@ exports.games = (function () {
 							"res/visuals/simchess-600x600-2d.jpg"
 						]
 					},
+					"blackstarts" : false,
 					"xdView": true,
 					"css": config_view_css,
 					"preferredRatio": 1,
@@ -5374,6 +5376,7 @@ exports.games = (function () {
 					},
 					"gameOptions": {
 						"quarksjump" : false,
+						"blackstarts" : false,
 						"queenrestriction" : true,
 						"preventRepeat": true,
 						"uctTransposition": "state",
@@ -5395,6 +5398,7 @@ exports.games = (function () {
 							"res/visuals/simchess-600x600-2d.jpg"
 						]
 					},
+					"blackstarts" : false,
 					"xdView": true,
 					"css": config_view_css,
 					"preferredRatio": 1,
@@ -5421,7 +5425,149 @@ exports.games = (function () {
 					"useAutoComplete": true
 				}
 			},
-			"viewScripts": config_view_simchess
+				"viewScripts": config_view_simchess
+			},
+			{
+				"name": "simchess-chess-blackstarts",
+				"modelScripts": modelScripts_simchess,
+				"config": {
+					"status": true,
+					"model": {
+						"title-en": "Simchess",
+						"summary": "The evolution of chess",
+						"rules": {
+							"en": "simchess-rules.html"
+						},
+						"module": "chessbase",
+						"plazza": "true",
+						"thumbnail": "simchess-thumb.png",
+						"released": 1587485628,
+						"credits": {
+							"en": "simchess-credits.html"
+						},
+						"gameOptions": {
+							"quarksjump" : true,						
+							"queenrestriction" : false,
+							"blackstarts" : true,
+							"preventRepeat": true,
+							"uctTransposition": "state",
+							"uctIgnoreLoop": false,
+							"levelOptions": config_model_gameOptions_levelOptions
+						},
+						"obsolete": false,
+						"js": modelScripts_simchess,
+						"description": {
+							"en": "simchess-description.html"
+						},
+						"levels": config_model_levels_15
+					},
+					"view": {
+						"title-en": "Simchess view",
+						"visuals": {
+							"600x600": [
+								"res/visuals/simchess-600x600-3d.jpg",
+								"res/visuals/simchess-600x600-2d.jpg"
+							]
+						},
+						"blackstarts" : true,
+						"xdView": true,
+						"css": config_view_css,
+						"preferredRatio": 1,
+						"useShowMoves": true,
+						"useNotation": true,
+						"module": "chessbase",
+						"defaultOptions": config_view_defaultOptions,
+						"skins": [
+							{
+								"name": "skin2d",
+								"title": "2D Classic",
+								"3d": false,
+								"preload": [
+									"image|/res/images/cancel.png",
+									"image|/res/images/whitebg.png",
+									"image|/res/simchess/gamesprites.png"
+								]
+							}
+						],
+						"animateSelfMoves": false,
+						"switchable": true,
+						"sounds": config_view_sounds,
+						"js": config_view_simchess,
+						"useAutoComplete": true
+					}
+				},
+				"viewScripts": config_view_simchess
+			},
+			{
+				"name": "simchess-chess-v2-blackstarts",
+				"modelScripts": modelScripts_simchess,
+				"config": {
+					"status": true,
+					"model": {
+						"title-en": "Simchess",
+						"summary": "The evolution of chess",
+						"rules": {
+							"en": "simchess-rules.html"
+						},
+						"module": "chessbase",
+						"plazza": "true",
+						"thumbnail": "simchess-thumb.png",
+						"released": 1587485628,
+						"credits": {
+							"en": "simchess-credits.html"
+						},
+						"gameOptions": {
+							"quarksjump" : false,
+							"blackstarts" : true,
+							"queenrestriction" : true,
+							"preventRepeat": true,
+							"uctTransposition": "state",
+							"uctIgnoreLoop": false,
+							"levelOptions": config_model_gameOptions_levelOptions
+						},
+						"obsolete": false,
+						"js": modelScripts_simchess,
+						"description": {
+							"en": "simchess-description.html"
+						},
+						"levels": config_model_levels_15
+					},
+					"view": {
+						"title-en": "Simchess view",
+						"visuals": {
+							"600x600": [
+								"res/visuals/simchess-600x600-3d.jpg",
+								"res/visuals/simchess-600x600-2d.jpg"
+							]
+						},
+						"blackstarts" : true,
+						"xdView": true,
+						"css": config_view_css,
+						"preferredRatio": 1,
+						"useShowMoves": true,
+						"useNotation": true,
+						"module": "chessbase",
+						"defaultOptions": config_view_defaultOptions,
+						"skins": [
+							{
+								"name": "skin2d",
+								"title": "2D Classic",
+								"3d": false,
+								"preload": [
+									"image|/res/images/cancel.png",
+									"image|/res/images/whitebg.png",
+									"image|/res/simchess/gamesprites.png"
+								]
+							}
+						],
+						"animateSelfMoves": false,
+						"switchable": true,
+						"sounds": config_view_sounds,
+						"js": config_view_simchess,
+						"useAutoComplete": true
+					}
+				},
+				"viewScripts": config_view_simchess
 			}
 	]
 })()

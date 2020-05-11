@@ -285,7 +285,7 @@
                 aspect: 'fr-queen',
                 graph: this.cbQueenGraph(geometry, confine4Queen),
                 value: 9,
-                initial: [{ s: 1, p: 14 }, { s: -1, p: 84 }],
+                initial: [{ s: 1, p: this.mOptions.blackstarts ? 15 : 14 }, { s: -1, p: this.mOptions.blackstarts ? 85 : 84 }],
             },
 
             8: {
@@ -294,7 +294,7 @@
                 aspect: 'fr-king',
                 graph: this.cbKingGraph(geometry, confine),
                 isKing: true,
-                initial: [{ s: 1, p: 15 }, { s: -1, p: 85 }],
+                initial: [{ s: 1, p: this.mOptions.blackstarts ? 14 : 15 }, { s: -1, p: this.mOptions.blackstarts ? 84 : 85 }],
             },
 
             9: {
@@ -330,7 +330,7 @@
                 aspect: 'fr-quarks',
                 graph: this.cbQuarksGraph(geometry, confine),
                 value: 7,
-                initial: [{ s: 1, p: 3 }, { s: -1, p: 93 }],
+                initial: [{ s: 1, p: this.mOptions.blackstarts ? 6 : 3 }, { s: -1, p: this.mOptions.blackstarts ? 96 : 93 }],
             },
 
             13: {
@@ -357,7 +357,7 @@
                 aspect: 'fr-princess',
                 graph: this.cbPrincessGraph(geometry, confine),
                 value: 4,
-                initial: [{ s: 1, p: 19 }, { s: -1, p: 89 }],
+                initial: [{ s: 1, p: this.mOptions.blackstarts ? 10 : 19 }, { s: -1, p: this.mOptions.blackstarts ? 80 : 89 }],
             },
 
             16: {
@@ -366,7 +366,7 @@
                 aspect: 'fr-prince',
                 graph: this.cbPrinceGraph(geometry, confine),
                 value: 4,
-                initial: [{ s: 1, p: 10 }, { s: -1, p: 80 }],
+                initial: [{ s: 1, p: this.mOptions.blackstarts ? 19 : 10 }, { s: -1, p: this.mOptions.blackstarts ? 89 : 80 }],
             },
 
             17: {
@@ -375,9 +375,8 @@
                 aspect: 'fr-quarks-proton',
                 graph: this.cbQuarksGraph(geometry, confine),
                 value: 7,
-                initial: [{ s: 1, p: 6 }, { s: -1, p: 96 }],
+                initial: [{ s: 1, p: this.mOptions.blackstarts ? 3 : 6 }, { s: -1, p: this.mOptions.blackstarts ? 93 : 96 }],
             }
-
         }
 
 
@@ -405,19 +404,18 @@
             },
 
             castle: {
-                "4/0": { k: [3, 2], r: [1, 2, 3], n: "O-O-O" },
+                /*"4/0": { k: [3, 2], r: [1, 2, 3], n: "O-O-O" },
                 "4/7": { k: [5, 6], r: [6, 5], n: "O-O" },
                 "60/56": { k: [59, 58], r: [57, 58, 59], n: "O-O-O" },
-                "60/63": { k: [61, 62], r: [62, 61], n: "O-O" },
+                "60/63": { k: [61, 62], r: [62, 61], n: "O-O" },*/
             },
 
         };
     }
-
-
-
+    
     var SuperModelBoardGenerateMoves=Model.Board.GenerateMoves;
 	Model.Board.GenerateMoves = function(aGame) {
+
 		SuperModelBoardGenerateMoves.apply(this,arguments); // call regular GenerateMoves method
 
 		// prince-ss special moves
@@ -458,60 +456,9 @@
 		}
 		for (var i = 0 ; i < xtraMoves.length; i++){
 			this.mMoves.push(xtraMoves[i]);
-		}
+        }        
+
     }
-    /*
-    Model.Board.ApplyMove = function(aGame,move) {
-
-        // if the final position is not the one indicated by the interface (ex : capture on another position)
-        var realt = (move.finalt != undefined) ? move.finalt : move.t ;
-
-		var piece=this.pieces[this.board[move.f]];
-		if(move.cg!==undefined)
-			this.cbApplyCastle(aGame,move,true);
-		else {
-			this.zSign=aGame.zobrist.update(this.zSign,"board",piece.i,move.f);
-			this.board[piece.p]=-1;
-			if(move.pr!==undefined) {
-				this.zSign=aGame.zobrist.update(this.zSign,"type",piece.t,piece.i);
-				piece.t=move.pr;
-				this.zSign=aGame.zobrist.update(this.zSign,"type",piece.t,piece.i);
-			}
-			if(move.c!=null) {
-				var piece1=this.pieces[move.c];
-				this.zSign=aGame.zobrist.update(this.zSign,"board",piece1.i,piece1.p);
-				this.board[piece1.p]=-1;
-				piece1.p=-1;
-				piece1.m=true;
-				this.noCaptCount=0;
-			} else 
-				this.noCaptCount++;
-			piece.p=realt;
-			piece.m=true;
-			this.board[realt]=piece.i;
-			this.zSign=aGame.zobrist.update(this.zSign,"board",piece.i,realt);
-			if(aGame.g.pTypes[piece.t].isKing)
-				this.kings[piece.s]=realt;
-		}
-		this.check=!!move.ck;
-		this.lastMove={
-			f: move.f,
-			t: realt,
-			c: move.c,
-		}
-		if(move.ko!==undefined)
-			this.ending[piece.s]=move.ko;
-		if(move.ept!==undefined)
-			this.epTarget={
-				p: move.ept,
-				i: piece.i,
-			}
-		else
-			this.epTarget=null;
-		this.zSign=aGame.zobrist.update(this.zSign,"who",-this.mWho);
-		this.zSign=aGame.zobrist.update(this.zSign,"who",this.mWho);	
-		//this.cbIntegrity(aGame);
-	}*/
 
 
 })();
