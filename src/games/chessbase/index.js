@@ -5362,8 +5362,8 @@ exports.games = (function () {
 			"config": {
 				"status": true,
 				"model": {
-					"title-en": "Simchess",
-					"summary": "The evolution of chess",
+					"title-en": "Simchess 2",
+					"summary": "Queens & Quarks moves restrictions",
 					"rules": {
 						"en": "simchess-rules.html"
 					},
@@ -5434,7 +5434,7 @@ exports.games = (function () {
 					"status": true,
 					"model": {
 						"title-en": "Simchess",
-						"summary": "The evolution of chess",
+						"summary": "Black starts",
 						"rules": {
 							"en": "simchess-rules.html"
 						},
@@ -5504,8 +5504,8 @@ exports.games = (function () {
 				"config": {
 					"status": true,
 					"model": {
-						"title-en": "Simchess",
-						"summary": "The evolution of chess",
+						"title-en": "Simchess 2",
+						"summary": "V2 and black starts",
 						"rules": {
 							"en": "simchess-rules.html"
 						},
