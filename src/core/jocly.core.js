@@ -350,6 +350,11 @@
 			self.element = element;
 			var iframeUrl = "jocly.embed.html";
 
+			var tab = window.location.href.split("?");
+			if (tab.length == 2){
+				iframeUrl = iframeUrl+"?"+tab[1];
+			}
+
 			var iframe = document.createElement("iframe");
 			var attrs = {
 				name: "jocly-embedded-" + self.id,
