@@ -149,6 +149,8 @@
                 $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["90", 2,  jumpflag], ["0", 1]], graph, confine, geometry, flags);
                 $this.cbExploreFlagedWay(pos, dc, [["0", 2, jumpflag], ["-90", 1, $this.cbConstants.FLAG_STOP], ["-90", 1]], graph, confine, geometry, flags);
                 $this.cbExploreFlagedWay(pos, dc, [["0", 2, jumpflag], ["90", 1, $this.cbConstants.FLAG_STOP], ["90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 2, jumpflag], ["-90", 1, jumpflag],["0", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 2, jumpflag], ["90", 1, jumpflag],["0", 1]], graph, confine, geometry, flags);
                 $this.cbExploreFlagedWay(pos, dc, [["0", 3, jumpflag], ["-90", 1]], graph, confine, geometry, flags);
                 $this.cbExploreFlagedWay(pos, dc, [["0", 3, jumpflag], ["90", 1]], graph, confine, geometry, flags);
             });
@@ -208,6 +210,10 @@
             confine4Queen = restrictedConfine ;
         }
 
+        if (this.mOptions.vschess){
+        }
+
+
         var piecesTypes = {
 
 
@@ -218,6 +224,9 @@
                 graph: this.cbInitialPawnGraph(geometry, 1, confine),
                 value: 1,
                 initial: [{ s: 1, p: 20 }, { s: 1, p: 21 }, { s: 1, p: 22 }, { s: 1, p: 23 }, { s: 1, p: 24 }, { s: 1, p: 25 }, { s: 1, p: 26 }, { s: 1, p: 27 }, { s: 1, p: 28 }, { s: 1, p: 29 }],
+                /*initial: this.mOptions.vschess ? 
+                    [{ s: 1, p: 21 }, { s: 1, p: 22 }, { s: 1, p: 23 }, { s: 1, p: 24 }, { s: 1, p: 25 }, { s: 1, p: 26 }, { s: 1, p: 27 }, { s: 1, p: 28 }] : 
+                    [{ s: 1, p: 20 }, { s: 1, p: 21 }, { s: 1, p: 22 }, { s: 1, p: 23 }, { s: 1, p: 24 }, { s: 1, p: 25 }, { s: 1, p: 26 }, { s: 1, p: 27 }, { s: 1, p: 28 }, { s: 1, p: 29 }],*/
                 epTarget: true,
             },
 
@@ -227,7 +236,9 @@
                 aspect: 'fr-pawn',
                 graph: this.cbInitialPawnGraph(geometry, -1, confine),
                 value: 1,
-                initial: [{ s: -1, p: 70 }, { s: -1, p: 71 }, { s: -1, p: 72 }, { s: -1, p: 73 }, { s: -1, p: 74 }, { s: -1, p: 75 }, { s: -1, p: 76 }, { s: -1, p: 77 }, { s: -1, p: 78 }, { s: -1, p: 79 }],
+                initial: this.mOptions.vschess ? 
+                    [{ s: -1, p: 71 }, { s: -1, p: 72 }, { s: -1, p: 73 }, { s: -1, p: 74 }, { s: -1, p: 75 }, { s: -1, p: 76 }, { s: -1, p: 77 }, { s: -1, p: 78 }] :
+                    [{ s: -1, p: 70 }, { s: -1, p: 71 }, { s: -1, p: 72 }, { s: -1, p: 73 }, { s: -1, p: 74 }, { s: -1, p: 75 }, { s: -1, p: 76 }, { s: -1, p: 77 }, { s: -1, p: 78 }, { s: -1, p: 79 }],
                 epTarget: true,
             },
 
@@ -303,7 +314,7 @@
                 aspect: 'fr-mind',
                 graph: this.cbMindGraph(geometry, confine),
                 value: 5,
-                initial: [{ s: 1, p: 0 }, { s: 1, p: 9 }, { s: -1, p: 90 }, { s: -1, p: 99 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: 0 }, { s: 1, p: 9 }] : [{ s: 1, p: 0 }, { s: 1, p: 9 }, { s: -1, p: 90 }, { s: -1, p: 99 }],
             },
 
             10: {
@@ -312,7 +323,7 @@
                 aspect: 'fr-env',
                 graph: this.cbEnvGraph(geometry, confine),
                 value: 5,
-                initial: [{ s: 1, p: 1 }, { s: 1, p: 8 }, { s: -1, p: 91 }, { s: -1, p: 98 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: 1 }, { s: 1, p: 8 }] : [{ s: 1, p: 1 }, { s: 1, p: 8 }, { s: -1, p: 91 }, { s: -1, p: 98 }],
             },
 
             11: {
@@ -321,7 +332,7 @@
                 aspect: 'fr-dna',
                 graph: this.cbDNAGraph(geometry, confine),
                 value: 2,
-                initial: [{ s: 1, p: 2 }, { s: 1, p: 7 }, { s: -1, p: 92 }, { s: -1, p: 97 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: 2 }, { s: 1, p: 7 }] : [{ s: 1, p: 2 }, { s: 1, p: 7 }, { s: -1, p: 92 }, { s: -1, p: 97 }],
             },
 
             12: {
@@ -330,7 +341,7 @@
                 aspect: 'fr-quarks',
                 graph: this.cbQuarksGraph(geometry, confine),
                 value: 7,
-                initial: [{ s: 1, p: this.mOptions.blackstarts ? 6 : 3 }, { s: -1, p: this.mOptions.blackstarts ? 96 : 93 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: this.mOptions.blackstarts ? 6 : 3 }] : [{ s: 1, p: this.mOptions.blackstarts ? 6 : 3 }, { s: -1, p: this.mOptions.blackstarts ? 96 : 93 }],
             },
 
             13: {
@@ -339,7 +350,7 @@
                 aspect: 'fr-sun',
                 graph: this.cbSunGraph(geometry, confine),
                 value: 10,
-                initial: [{ s: 1, p: 4 }, { s: -1, p: 94 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: 4 }] : [{ s: 1, p: 4 }, { s: -1, p: 94 }],
             },
 
             14: {
@@ -348,7 +359,7 @@
                 aspect: 'fr-moon',
                 graph: this.cbMoonGraph(geometry, confine),
                 value: 8,
-                initial: [{ s: 1, p: 5 }, { s: -1, p: 95 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: 5 }] : [{ s: 1, p: 5 }, { s: -1, p: 95 }],
             },
 
             15: {
@@ -357,7 +368,7 @@
                 aspect: 'fr-princess',
                 graph: this.cbPrincessGraph(geometry, confine),
                 value: 4,
-                initial: [{ s: 1, p: this.mOptions.blackstarts ? 10 : 19 }, { s: -1, p: this.mOptions.blackstarts ? 80 : 89 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: this.mOptions.blackstarts ? 10 : 19 }] : [{ s: 1, p: this.mOptions.blackstarts ? 10 : 19 }, { s: -1, p: this.mOptions.blackstarts ? 80 : 89 }],
             },
 
             16: {
@@ -366,7 +377,7 @@
                 aspect: 'fr-prince',
                 graph: this.cbPrinceGraph(geometry, confine),
                 value: 4,
-                initial: [{ s: 1, p: this.mOptions.blackstarts ? 19 : 10 }, { s: -1, p: this.mOptions.blackstarts ? 89 : 80 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: this.mOptions.blackstarts ? 19 : 10 }] : [{ s: 1, p: this.mOptions.blackstarts ? 19 : 10 }, { s: -1, p: this.mOptions.blackstarts ? 89 : 80 }],
             },
 
             17: {
@@ -375,7 +386,7 @@
                 aspect: 'fr-quarks-proton',
                 graph: this.cbQuarksGraph(geometry, confine),
                 value: 7,
-                initial: [{ s: 1, p: this.mOptions.blackstarts ? 3 : 6 }, { s: -1, p: this.mOptions.blackstarts ? 93 : 96 }],
+                initial: this.mOptions.vschess ? [{ s: 1, p: this.mOptions.blackstarts ? 3 : 6 }] : [{ s: 1, p: this.mOptions.blackstarts ? 3 : 6 }, { s: -1, p: this.mOptions.blackstarts ? 93 : 96 }],
             }
         }
 
