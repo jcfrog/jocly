@@ -5568,6 +5568,78 @@ exports.games = (function () {
 					}
 				},
 				"viewScripts": config_view_simchess
+			},
+			{
+				"name": "simchess-vs-chess",
+				"modelScripts": modelScripts_simchess,
+				"config": {
+					"status": true,
+					"model": {
+						"title-en": "Simchess vs Chess",
+						"summary": "Play Simchess versus Chess",
+						"rules": {
+							"en": "simchess-rules.html"
+						},
+						"module": "chessbase",
+						"plazza": "true",
+						"thumbnail": "simchess-thumb.png",
+						"released": 1587485628,
+						"credits": {
+							"en": "simchess-credits.html"
+						},
+						"gameOptions": {
+							"vschess":true,
+							"quarksjump" : true,
+							"blackstarts" : false,
+							"queenrestriction" : false,
+							"preventRepeat": true,
+							"uctTransposition": "state",
+							"uctIgnoreLoop": false,
+							"levelOptions": config_model_gameOptions_levelOptions
+						},
+						"obsolete": false,
+						"js": modelScripts_simchess,
+						"description": {
+							"en": "simchess-description.html"
+						},
+						"levels": config_model_levels_15
+					},
+					"view": {
+						"title-en": "Simchess view",
+						"visuals": {
+							"600x600": [
+								"res/visuals/simchess-600x600-3d.jpg",
+								"res/visuals/simchess-600x600-2d.jpg"
+							]
+						},
+						"blackstarts" : false,
+						"xdView": true,
+						"css": config_view_css,
+						"preferredRatio": 1,
+						"useShowMoves": true,
+						"useNotation": true,
+						"module": "chessbase",
+						"defaultOptions": config_view_defaultOptions,
+						"skins": [
+							{
+								"name": "skin2d",
+								"title": "2D Classic",
+								"3d": false,
+								"preload": [
+									"image|/res/images/cancel.png",
+									"image|/res/images/whitebg.png",
+									"image|/res/simchess/gamesprites.png"
+								]
+							}
+						],
+						"animateSelfMoves": false,
+						"switchable": true,
+						"sounds": config_view_sounds,
+						"js": config_view_simchess,
+						"useAutoComplete": true
+					}
+				},
+				"viewScripts": config_view_simchess
 			}
 	]
 })()
