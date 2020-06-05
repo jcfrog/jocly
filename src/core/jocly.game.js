@@ -416,6 +416,33 @@ JocGame.prototype.GameInitGame = function() {
 		else
 			this.mInitial=null;
 		this.InitGame();
+
+		// inject inits from url
+		var p = -1;
+		["&init=","?init="].forEach(function(str){
+			var pos = window.location.href.indexOf(str);
+			if (pos >= 0) p = pos;
+		});
+		if (p>=0){
+			// there are some init params
+			var $this = this ;
+			for (var pt in $this.cbVar.pieceTypes){
+				// reinit initial positions 
+				$this.cbVar.pieceTypes[pt].initial = [];
+			}
+			var str = window.location.href.substr(p+1);
+			str = str.split("&")[0];
+			str = str.substr("init=".length);			
+			str.split("+").forEach(function(couple){
+				var t=couple.split(":");
+				if (t.length == 3){
+					console.log("inject peace "+t[0]+", side "+t[1]+" at position "+t[2]);
+					$this.cbVar.pieceTypes[t[0]].initial.push({s : t[1], p : t[2]});
+				}
+			});
+		}		
+
+
 		this.mGameInited=true;
 	}
 }
@@ -590,8 +617,15 @@ JocGame.prototype.StartThreadedMachine = function(aOptions,algo) {
 	delete aOptions.Done;
 	delete aOptions.Progress;
 	var t0 = Date.now();
+
+	var workerUrl = "jocly.aiworker.js" ;
+	var tab = window.location.href.split("?");
+	if (tab.length == 2){
+		workerUrl = workerUrl+"?"+tab[1];
+	}
+
 	if(!this.aiWorker) {
-		this.aiWorker = new Worker(this.config.baseURL+'jocly.aiworker.js');
+		this.aiWorker = new Worker(this.config.baseURL+workerUrl);
 		this.aiWorker.postMessage({
 			type: "Init",
 			baseURL: this.config.baseURL,
