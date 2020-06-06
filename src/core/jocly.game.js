@@ -417,23 +417,37 @@ JocGame.prototype.GameInitGame = function() {
 			this.mInitial=null;
 		this.InitGame();
 
+		const regex = /[(\?|\&)]([^=]+)\=([^&#]+)/g;
+		const str = window.location.href ; 
+		let m;
+		var params = [];
+
+		while ((m = regex.exec(str)) !== null) {
+			// This is necessary to avoid infinite loops with zero-width matches
+			if (m.index === regex.lastIndex) {
+				regex.lastIndex++;
+			}
+			params[m[1]]=m[2];
+
+			// The result can be accessed through the `m`-variable.
+			/*m.forEach((match, groupIndex) => {
+				console.log(`Found match, group ${groupIndex}: ${match}`);
+			});*/
+		}
 		// inject inits from url
-		var p = -1;
-		["&init=","?init="].forEach(function(str){
-			var pos = window.location.href.indexOf(str);
-			if (pos >= 0) p = pos;
-		});
-		if (p>=0){
+		if (params["init"]){
 			// there are some init params
 			var $this = this ;
-			for (var pt in $this.cbVar.pieceTypes){
-				// reinit initial positions 
-				$this.cbVar.pieceTypes[pt].initial = [];
+
+			if (params["reset"] && params["reset"] == "y"){
+				for (var pt in $this.cbVar.pieceTypes){
+					// reinit initial positions 
+					$this.cbVar.pieceTypes[pt].initial = [];
+				}
 			}
-			var str = window.location.href.substr(p+1);
-			str = str.split("&")[0];
-			str = str.substr("init=".length);			
-			str.split("+").forEach(function(couple){
+
+			var piecesstr = params["init"];
+			piecesstr.split("+").forEach(function(couple){
 				var t=couple.split(":");
 				if (t.length == 3){
 					console.log("inject peace "+t[0]+", side "+t[1]+" at position "+t[2]);
