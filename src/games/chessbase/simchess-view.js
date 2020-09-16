@@ -18,6 +18,24 @@
             return 0;
     }
 
+    // url params
+    const regex = /[(\?|\&)]([^=]+)\=([^&#]+)/g;
+    const str = window.location.href ; 
+    let m;
+    var params = [];
+    while ((m = regex.exec(str)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+        params[m[1]]=m[2];
+    }
+    var bBlackStarts = false ;
+    if(params["bs"] && params["bs"]=="y"){
+        bBlackStarts = true ;
+    }
+
+    
     var getResource;
 
     // Reducing the promo frame which was overflowing the board screen
@@ -488,7 +506,7 @@
 
             paintOutNotation: function(spec,ctx,channel) {
 
-                var bReverseBoard = ((this.mViewAs<0) != (this.mViewOptions.blackstarts)) ;
+                var bReverseBoard = ((this.mViewAs<0) != (bBlackStarts)) ;
 
                 NBROWS=this.cbVar.geometry.height;
 		        NBCOLS=this.cbVar.geometry.width;
@@ -575,14 +593,14 @@
                 "1" : {
                     "default" : {
                         "2d": {
-                            clipy : this.mViewOptions.blackstarts ? 100 : 0  
+                            clipy : bBlackStarts ? 100 : 0  
                         }
                     }
                 },
                 "-1" : {
                     "default" : {
                         "2d": {
-                            clipy : this.mViewOptions.blackstarts ? 0 : 100  
+                            clipy : bBlackStarts ? 0 : 100  
                         }
                     }
                 },
