@@ -1,7 +1,31 @@
 (function () {
 
-    //var simchessVersion = "quarksjump" ;
-    var simchessVersion = "quarksnojump" ;
+    // url params
+    const regex = /[(\?|\&)]([^=]+)\=([^&#]+)/g;
+    const str = window.location.href ; 
+    let m;
+    var params = [];
+    while ((m = regex.exec(str)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+        params[m[1]]=m[2];
+    }
+
+    var bV2 = false ; // v2 game, quarks do not jump, queen restricted to 64 classiccenter cells
+    var bBlackStarts = false ;
+    var bVSChess = false ;
+    if(params["v2"] && params["v2"]=="y"){
+        bV2 = true ;
+    }
+    if(params["bs"] && params["bs"]=="y"){
+        bBlackStarts = true ;
+    }
+    if(params["vc"] && params["vc"]=="y"){
+        bVSChess = true ;
+    }
+
 
     //console.log("piecesTypes=",piecesTypes);
     // defining types for readable promo cases
@@ -23,6 +47,8 @@
     var T_princess = 15;
     var T_prince = 16;
     var T_quarks_proton = 17;
+    var T_imind = 18;
+    var T_ienv = 19;
 
 
 
@@ -108,9 +134,13 @@
     }
 
 
-    Model.Game.cbMindGraph = function (geometry, confine) {
+    Model.Game.cbMindGraph = function (geometry, confine, bJump = false) {
         var $this = this;
         var flags = $this.cbConstants.FLAG_MOVE | $this.cbConstants.FLAG_CAPTURE;
+        var jumpflag = $this.cbConstants.FLAG_STOP ;
+        if(bJump){
+			jumpflag = FLAG_JUMP ;
+		}
         var graph = {};
         for (var pos = 0; pos < geometry.boardSize; pos++) {
             graph[pos] = [];
@@ -118,16 +148,35 @@
                 continue;
             }
             [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]].forEach(function (dc) {
-                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["0", 1, $this.cbConstants.FLAG_STOP], ["45", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["0", 1, $this.cbConstants.FLAG_STOP], ["-45", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["45", 1, $this.cbConstants.FLAG_STOP], ["0", 1]], graph, confine, geometry, flags);
-                $this.cbExploreFlagedWay(pos, dc, [["0", 1, $this.cbConstants.FLAG_STOP], ["-45", 1, $this.cbConstants.FLAG_STOP], ["0", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 1, jumpflag], ["0", 1, jumpflag], ["45", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 1, jumpflag], ["0", 1, jumpflag], ["-45", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 1, jumpflag], ["45", 1, jumpflag], ["0", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 1, jumpflag], ["-45", 1, jumpflag], ["0", 1]], graph, confine, geometry, flags);
             });
         }
         return graph;
     }
-    Model.Game.cbEnvGraph = function (geometry, confine) {
-        return this.cbShortRangeGraph(geometry, [[-3, -1], [-3, 1], [-1, 3], [1, 3], [3, 1], [3, -1], [1, -3], [-1, -3]], confine);
+    Model.Game.cbEnvGraph = function (geometry, confine, bJump = false) {
+		//return this.cbShortRangeGraph(geometry, [[-3, -1], [-3, 1], [-1, 3], [1, 3], [3, 1], [3, -1], [1, -3], [-1, -3]], confine);
+        var $this = this;
+        var flags = $this.cbConstants.FLAG_MOVE | $this.cbConstants.FLAG_CAPTURE;
+        var jumpflag = $this.cbConstants.FLAG_STOP ;
+		if(bJump){
+			jumpflag = FLAG_JUMP ;
+		}
+        var graph = {};
+        for (var pos = 0; pos < geometry.boardSize; pos++) {
+            graph[pos] = [];
+            [[1, 1], [1, -1], [-1, -1], [-1, -1]].forEach(function (dc) {
+				$this.cbExploreFlagedWay(pos, dc, [["0", 1, jumpflag], ["-90", 1, jumpflag], ["0", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 1, jumpflag], ["90", 1,  jumpflag], ["0", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 2, jumpflag], ["-90", 1]], graph, confine, geometry, flags);
+                $this.cbExploreFlagedWay(pos, dc, [["0", 2, jumpflag], ["90", 1]], graph, confine, geometry, flags);
+            });
+        }
+
+        return graph;
+		
     }
     Model.Game.cbDNAGraph = function (geometry, confine) {
         return this.cbShortRangeGraph(geometry, [[-2, 0], [-2, 2], [0, 2], [2, 2], [2, 0], [2, -2], [0, -2], [-2, -2]], confine);
@@ -136,7 +185,7 @@
         var $this = this;
         var flags = $this.cbConstants.FLAG_MOVE | $this.cbConstants.FLAG_CAPTURE;
         var jumpflag = $this.cbConstants.FLAG_STOP ;
-		if($this.mOptions.quarksjump){
+		if(!bV2){
 			jumpflag = FLAG_JUMP ;
 		}
         var graph = {};
@@ -206,13 +255,9 @@
 
         // classic chess pieces
         var confine4Queen = confine ;
-        if (this.mOptions.queenrestriction){
+        if (bV2){
             confine4Queen = restrictedConfine ;
         }
-
-        if (this.mOptions.vschess){
-        }
-
 
         var piecesTypes = {
 
@@ -224,7 +269,7 @@
                 graph: this.cbInitialPawnGraph(geometry, 1, confine),
                 value: 1,
                 initial: [{ s: 1, p: 20 }, { s: 1, p: 21 }, { s: 1, p: 22 }, { s: 1, p: 23 }, { s: 1, p: 24 }, { s: 1, p: 25 }, { s: 1, p: 26 }, { s: 1, p: 27 }, { s: 1, p: 28 }, { s: 1, p: 29 }],
-                /*initial: this.mOptions.vschess ? 
+                /*initial: bVSChess ? 
                     [{ s: 1, p: 21 }, { s: 1, p: 22 }, { s: 1, p: 23 }, { s: 1, p: 24 }, { s: 1, p: 25 }, { s: 1, p: 26 }, { s: 1, p: 27 }, { s: 1, p: 28 }] : 
                     [{ s: 1, p: 20 }, { s: 1, p: 21 }, { s: 1, p: 22 }, { s: 1, p: 23 }, { s: 1, p: 24 }, { s: 1, p: 25 }, { s: 1, p: 26 }, { s: 1, p: 27 }, { s: 1, p: 28 }, { s: 1, p: 29 }],*/
                 epTarget: true,
@@ -236,7 +281,7 @@
                 aspect: 'fr-pawn',
                 graph: this.cbInitialPawnGraph(geometry, -1, confine),
                 value: 1,
-                initial: this.mOptions.vschess ? 
+                initial: bVSChess ? 
                     [{ s: -1, p: 71 }, { s: -1, p: 72 }, { s: -1, p: 73 }, { s: -1, p: 74 }, { s: -1, p: 75 }, { s: -1, p: 76 }, { s: -1, p: 77 }, { s: -1, p: 78 }] :
                     [{ s: -1, p: 70 }, { s: -1, p: 71 }, { s: -1, p: 72 }, { s: -1, p: 73 }, { s: -1, p: 74 }, { s: -1, p: 75 }, { s: -1, p: 76 }, { s: -1, p: 77 }, { s: -1, p: 78 }, { s: -1, p: 79 }],
                 epTarget: true,
@@ -296,7 +341,7 @@
                 aspect: 'fr-queen',
                 graph: this.cbQueenGraph(geometry, confine4Queen),
                 value: 9,
-                initial: [{ s: 1, p: this.mOptions.blackstarts ? 15 : 14 }, { s: -1, p: this.mOptions.blackstarts ? 85 : 84 }],
+                initial: [{ s: 1, p: bBlackStarts ? 15 : 14 }, { s: -1, p: bBlackStarts ? 85 : 84 }],
             },
 
             8: {
@@ -305,7 +350,7 @@
                 aspect: 'fr-king',
                 graph: this.cbKingGraph(geometry, confine),
                 isKing: true,
-                initial: [{ s: 1, p: this.mOptions.blackstarts ? 14 : 15 }, { s: -1, p: this.mOptions.blackstarts ? 84 : 85 }],
+                initial: [{ s: 1, p: bBlackStarts ? 14 : 15 }, { s: -1, p: bBlackStarts ? 84 : 85 }],
             },
 
             9: {
@@ -314,7 +359,6 @@
                 aspect: 'fr-mind',
                 graph: this.cbMindGraph(geometry, confine),
                 value: 5,
-                initial: this.mOptions.vschess ? [{ s: 1, p: 0 }, { s: 1, p: 9 }] : [{ s: 1, p: 0 }, { s: 1, p: 9 }, { s: -1, p: 90 }, { s: -1, p: 99 }],
             },
 
             10: {
@@ -323,7 +367,6 @@
                 aspect: 'fr-env',
                 graph: this.cbEnvGraph(geometry, confine),
                 value: 5,
-                initial: this.mOptions.vschess ? [{ s: 1, p: 1 }, { s: 1, p: 8 }] : [{ s: 1, p: 1 }, { s: 1, p: 8 }, { s: -1, p: 91 }, { s: -1, p: 98 }],
             },
 
             11: {
@@ -332,7 +375,7 @@
                 aspect: 'fr-dna',
                 graph: this.cbDNAGraph(geometry, confine),
                 value: 2,
-                initial: this.mOptions.vschess ? [{ s: 1, p: 2 }, { s: 1, p: 7 }] : [{ s: 1, p: 2 }, { s: 1, p: 7 }, { s: -1, p: 92 }, { s: -1, p: 97 }],
+                initial: bVSChess ? [{ s: 1, p: 2 }, { s: 1, p: 7 }] : [{ s: 1, p: 2 }, { s: 1, p: 7 }, { s: -1, p: 92 }, { s: -1, p: 97 }],
             },
 
             12: {
@@ -341,7 +384,7 @@
                 aspect: 'fr-quarks',
                 graph: this.cbQuarksGraph(geometry, confine),
                 value: 7,
-                initial: this.mOptions.vschess ? [{ s: 1, p: this.mOptions.blackstarts ? 6 : 3 }] : [{ s: 1, p: this.mOptions.blackstarts ? 6 : 3 }, { s: -1, p: this.mOptions.blackstarts ? 96 : 93 }],
+                initial: bVSChess ? [{ s: 1, p: bBlackStarts ? 6 : 3 }] : [{ s: 1, p: bBlackStarts ? 6 : 3 }, { s: -1, p: bBlackStarts ? 96 : 93 }],
             },
 
             13: {
@@ -350,7 +393,7 @@
                 aspect: 'fr-sun',
                 graph: this.cbSunGraph(geometry, confine),
                 value: 10,
-                initial: this.mOptions.vschess ? [{ s: 1, p: 4 }] : [{ s: 1, p: 4 }, { s: -1, p: 94 }],
+                initial: bVSChess ? [{ s: 1, p: 4 }] : [{ s: 1, p: 4 }, { s: -1, p: 94 }],
             },
 
             14: {
@@ -359,7 +402,7 @@
                 aspect: 'fr-moon',
                 graph: this.cbMoonGraph(geometry, confine),
                 value: 8,
-                initial: this.mOptions.vschess ? [{ s: 1, p: 5 }] : [{ s: 1, p: 5 }, { s: -1, p: 95 }],
+                initial: bVSChess ? [{ s: 1, p: 5 }] : [{ s: 1, p: 5 }, { s: -1, p: 95 }],
             },
 
             15: {
@@ -368,7 +411,7 @@
                 aspect: 'fr-princess',
                 graph: this.cbPrincessGraph(geometry, confine),
                 value: 4,
-                initial: this.mOptions.vschess ? [{ s: 1, p: this.mOptions.blackstarts ? 10 : 19 }] : [{ s: 1, p: this.mOptions.blackstarts ? 10 : 19 }, { s: -1, p: this.mOptions.blackstarts ? 80 : 89 }],
+                initial: bVSChess ? [{ s: 1, p: bBlackStarts ? 10 : 19 }] : [{ s: 1, p: bBlackStarts ? 10 : 19 }, { s: -1, p: bBlackStarts ? 80 : 89 }],
             },
 
             16: {
@@ -377,7 +420,7 @@
                 aspect: 'fr-prince',
                 graph: this.cbPrinceGraph(geometry, confine),
                 value: 4,
-                initial: this.mOptions.vschess ? [{ s: 1, p: this.mOptions.blackstarts ? 19 : 10 }] : [{ s: 1, p: this.mOptions.blackstarts ? 19 : 10 }, { s: -1, p: this.mOptions.blackstarts ? 89 : 80 }],
+                initial: bVSChess ? [{ s: 1, p: bBlackStarts ? 19 : 10 }] : [{ s: 1, p: bBlackStarts ? 19 : 10 }, { s: -1, p: bBlackStarts ? 89 : 80 }],
             },
 
             17: {
@@ -386,7 +429,25 @@
                 aspect: 'fr-quarks-proton',
                 graph: this.cbQuarksGraph(geometry, confine),
                 value: 7,
-                initial: this.mOptions.vschess ? [{ s: 1, p: this.mOptions.blackstarts ? 3 : 6 }] : [{ s: 1, p: this.mOptions.blackstarts ? 3 : 6 }, { s: -1, p: this.mOptions.blackstarts ? 93 : 96 }],
+                initial: bVSChess ? [{ s: 1, p: bBlackStarts ? 3 : 6 }] : [{ s: 1, p: bBlackStarts ? 3 : 6 }, { s: -1, p: bBlackStarts ? 93 : 96 }],
+            },
+
+            18: {
+                name: 'imind',
+                abbrev: 'M',
+                aspect: 'fr-mind',
+                graph: this.cbMindGraph(geometry, confine, true),
+                value: 5,
+                initial: bVSChess ? [{ s: 1, p: 0 }, { s: 1, p: 9 }] : [{ s: 1, p: 0 }, { s: 1, p: 9 }, { s: -1, p: 90 }, { s: -1, p: 99 }],
+            },
+
+            19: {
+                name: 'ienv',
+                abbrev: 'E',
+                aspect: 'fr-env',
+                graph: this.cbEnvGraph(geometry, confine, true),
+                value: 5,
+                initial: bVSChess ? [{ s: 1, p: 1 }, { s: 1, p: 8 }] : [{ s: 1, p: 1 }, { s: 1, p: 8 }, { s: -1, p: 91 }, { s: -1, p: 98 }],
             }
         }
 
@@ -410,7 +471,11 @@
 
                 if (piece.t == T_pawnb && (geometry.R(move.t) == firstRow))
                     return [T_rook, T_knight, T_bishop, T_queen];
-
+                    
+                if (piece.t == T_ienv)
+                    return [T_env];
+                if (piece.t == T_imind)
+                    return [T_mind];
                 return [];
             },
 
